@@ -3,4 +3,6 @@ site_url: https://example.com/
 nav:
   - Home: index.md
   - About: about.md
+  - Projects:
+    - 'Deploying Kubernetes on GCP with CI/CD': kubernetes-deploy.md
 theme: minty
