@@ -4,5 +4,5 @@ nav:
   - Home: index.md
   - About: about.md
   - Projects:
-    - 'Deploying Kubernetes on GCP with CI/CD': /projects/kubernetes-deploy.md
+    - Deploying Kubernetes on GCP with CI/CD: projects/kubernetes-deploy.md
 theme: minty
