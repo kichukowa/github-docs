@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://example.com/projects/kubernetes-deploy/">
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>Deploying Kubernetes on GCP with CI/CD - Anastasia's Docs</title>
+        <link href="../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../../css/brands.min.css" rel="stylesheet">
+        <link href="../../css/solid.min.css" rel="stylesheet">
+        <link href="../../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atelier-cave-light.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../..">Anastasia's Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="../.." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../../about/" class="nav-link">About</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Projects</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="./" class="dropdown-item active" aria-current="page">Deploying Kubernetes on GCP with CI/CD</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../../about/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" class="nav-link disabled">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#deploying-kubernetes-on-gcp-with-cicd" class="nav-link">Deploying Kubernetes on GCP with CI/CD</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#topic-1-version-control-with-github" class="nav-link">Topic 1: Version Control with GitHub</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#topic-2-infrastructure-as-code-with-terraform" class="nav-link">Topic 2: Infrastructure as Code with Terraform</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#topic-3-continuous-integrationcontinuous-deployment-cicd-with-github-actions" class="nav-link">Topic 3: Continuous Integration/Continuous Deployment (CI/CD) with GitHub Actions</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#topic-4-containerization-with-docker" class="nav-link">Topic 4: Containerization with Docker</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#topic-5-kubernetes-basics-and-gke" class="nav-link">Topic 5: Kubernetes Basics and GKE</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#topic-6-networking-and-ingress-in-kubernetes" class="nav-link">Topic 6: Networking and Ingress in Kubernetes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#topic-7-health-checks-in-kubernetes" class="nav-link">Topic 7: Health Checks in Kubernetes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#final-project" class="nav-link">Final Project</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="deploying-kubernetes-on-gcp-with-cicd">Deploying Kubernetes on GCP with CI/CD</h1>
+<p>By the end of this learning path, participants will have hands-on experience with modern DevOps practices, including version control, infrastructure as code, CI/CD pipelines, containerization, and Kubernetes orchestration.</p>
+<p><br><br></p>
+<h2 id="topic-1-version-control-with-github">Topic 1: Version Control with GitHub</h2>
+<p><br></p>
+<h4 id="explanation">Explanation</h4>
+<p><strong>Why it's needed</strong>: Version control systems like GitHub are essential for managing changes to code, enabling collaboration, and maintaining a history of project changes.</p>
+<p><strong>Historical Methods</strong>: Earlier methods included manual versioning and centralized systems like SVN, which had limitations in collaboration and version control.</p>
+<p><br></p>
+<h4 id="theory">Theory</h4>
+<h5 id="key-git-concepts">Key Git Concepts</h5>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Kurzgesagt</th>
+<th>Definition</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Repositories</strong></td>
+<td>Central storage for project code and history.</td>
+<td>A repository (or "repo") is a storage location for software projects. It contains all the files, directories, and the history of changes (commits) for a project.</td>
+<td>Repositories are used to organize and manage the codebase, allowing multiple developers to collaborate on the same project. Each repository can be cloned to a local machine, where changes can be made and then pushed back to the remote repository.</td>
+</tr>
+<tr>
+<td><strong>2. Commits</strong></td>
+<td>Snapshots of changes with metadata for tracking progress.</td>
+<td>A commit is a snapshot of changes made to the files in a repository. Each commit records the state of the project at a specific point in time.</td>
+<td>Commits are used to track changes in a repository. Each commit has a unique identifier (hash) and includes metadata such as the author, timestamp, and a commit message describing the changes. This makes it easy to review the history of changes and revert to previous states if necessary.</td>
+</tr>
+<tr>
+<td><strong>3. Branches</strong></td>
+<td>Parallel versions of the codebase for isolated development.</td>
+<td>A branch is a parallel version of a repository. It diverges from the main codebase (often called "main" or "master") to allow for independent development without affecting the stable codebase.</td>
+<td>Branches are used to develop features, fix bugs, or experiment with new ideas. Once changes on a branch are tested and verified, they can be merged back into the main codebase. This allows for isolated development and easier management of different versions of the project.</td>
+</tr>
+<tr>
+<td><strong>4. Merges</strong></td>
+<td>Combining changes from different branches into one.</td>
+<td>A merge is the process of integrating changes from one branch into another. This often involves combining the contents of different branches and resolving any conflicts that arise.</td>
+<td>Merges are used to consolidate changes from different branches, ensuring that all updates are incorporated into the main codebase. This is a critical step in collaborative development, allowing multiple branches to converge into a single, unified project.</td>
+</tr>
+<tr>
+<td><strong>5. Pull Requests</strong></td>
+<td>Mechanism for submitting, reviewing, and merging contributions.</td>
+<td>A pull request (PR) is a method for submitting contributions to a project. It allows developers to notify others about changes they've made in a branch and request that these changes be reviewed and merged into the main branch.</td>
+<td>Pull requests are used to facilitate code review and collaboration. They provide a platform for discussing changes, reviewing code, and ensuring that contributions meet the project's standards before being merged. This process helps maintain code quality and encourages team collaboration.</td>
+</tr>
+<tr>
+<td><strong>6. Private Repositories</strong></td>
+<td>Restricted access, ideal for confidential or internal projects.</td>
+<td>Private repositories are repositories that are only accessible to the repository owner and specific collaborators who are granted access. They are not visible to the general public.</td>
+<td>Used for proprietary projects, internal development, or any work that should not be publicly accessible. Only authorized users can view, clone, and contribute to the repository.</td>
+</tr>
+<tr>
+<td><strong>7. Public Repositories</strong></td>
+<td>Open access, suitable for open-source and community collaboration.</td>
+<td>Public repositories are repositories that anyone can access. They are visible to everyone, and anyone can clone or download the code.</td>
+<td>Ideal for open-source projects, sharing knowledge, and collaboration with a wider community. Contributions can be made by anyone through pull requests, making it a key tool for open-source development.</td>
+</tr>
+<tr>
+<td><strong>8. Collaboration Tools</strong></td>
+<td>Features like issues, pull requests, project boards, code review, and wikis to enhance teamwork and project management.</td>
+<td>Collaboration tools in GitHub are features and integrations that facilitate teamwork and project management. These tools help coordinate efforts, manage tasks, and communicate effectively within a team.</td>
+<td><strong>Issues</strong>: Track tasks, enhancements, and bugs for your projects.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>Pull Requests</strong>: Review and discuss proposed changes before merging them.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>Project Boards</strong>: Organize and prioritize work using Kanban-style boards.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>Code Review</strong>: Review changes and leave feedback on pull requests.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>Wikis: Document your projects and share knowledge within the team.</td>
+</tr>
+<tr>
+<td><strong>9. GitHub Actions for CI/CD</strong></td>
+<td>Automates building, testing, and deploying applications through customizable workflows triggered by repository events.</td>
+<td>GitHub Actions is a CI/CD (Continuous Integration/Continuous Deployment) platform that automates the build, test, and deployment processes of your applications. It allows you to create workflows that are triggered by events within your repository.</td>
+<td>CI (Continuous Integration): Automatically build and test your code every time a change is pushed to the repository, ensuring that new commits do not break the project.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>CD (Continuous Deployment): Automate the deployment of your application to various environments (e.g., staging, production) after passing all tests and checks.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>Workflows: Defined using YAML files, these workflows specify the actions to be performed in response to specific events, such as pushes, pull requests, or scheduled intervals.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>Runners: Servers that execute the workflows. GitHub provides hosted runners, but you can also use self-hosted runners for more control over the environment.</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h4 id="improvements-and-modern-methods">Improvements and Modern Methods</h4>
+<p><strong>Better Collaboration</strong>: Use of pull requests and code reviews.</p>
+<ul>
+<li><strong>Pull Requests (PRs)</strong>: A pull request is a method for proposing changes to a repository. It allows developers to request that someone review and merge their changes into another branch, typically the main branch.<ul>
+<li><em>Example</em>:<ul>
+<li>Developer Alice creates a new branch <code>feature-xyz</code> from the main branch.</li>
+<li>She makes her changes and pushes <code>feature-xyz</code> to the remote repository.</li>
+<li>Alice then opens a pull request from <code>feature-xyz</code> to <code>main</code>, adding a detailed description of the changes.</li>
+<li>Reviewers can comment on specific lines, suggest changes, and ultimately approve the PR for merging.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Code Reviews</strong>: The process of systematically examining code changes by other developers before merging them.<ul>
+<li><em>Example</em>:<ul>
+<li>Bob reviews Alice's pull request. He notices a potential issue in the logic.</li>
+<li>Bob leaves a comment on the specific line of code and suggests an alternative approach.</li>
+<li>Alice makes the recommended changes and updates the PR.</li>
+<li>After a few iterations, Bob approves the PR, and it gets merged into the <code>main</code> branch.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>Automation</strong>: Integrating CI/CD pipelines with GitHub Actions.</p>
+<ul>
+<li><strong>CI/CD</strong>: Continuous Integration (CI) involves automatically building and testing code changes as they are made. Continuous Deployment (CD) extends this by automatically deploying the code to production once it passes all tests.</li>
+<li><strong>GitHub Actions</strong>: A CI/CD platform provided by GitHub that allows you to automate workflows directly in your GitHub repository using YAML files.<ul>
+<li><em>Example</em>:<ul>
+<li>Workflow Configuration: Create a <code>.github/workflows/ci.yml</code> file.</li>
+<li>The workflow below runs every time there is a push or pull request. It checks out the code, sets up Node.js, installs dependencies, and runs tests.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-yaml">name: CI
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - run: npm install
+    - run: npm test
+</code></pre>
+<p><strong>Security</strong>: Using branch protection and security policies.</p>
+<ul>
+<li><strong>Branch Protection</strong>: GitHub provides branch protection rules to enforce specific workflows and quality checks before merging.<ul>
+<li><em>Example</em>:<ul>
+<li>Require pull requests to be reviewed before merging.</li>
+<li>Enforce status checks to pass before merging.</li>
+<li>Restrict who can push to the branch.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Security Policies</strong>: These include setting up security policies, using Dependabot for automated dependency updates, and enforcing code scanning to identify vulnerabilities.<ul>
+<li><em>Example</em>:<ul>
+<li>Create a <code>SECURITY.md</code> file to outline the security policies and procedures.</li>
+<li>Enable Dependabot to automatically open pull requests for outdated or vulnerable dependencies.</li>
+<li>Configure code scanning tools like CodeQL to scan the repository for potential security issues.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><br></p>
+<h4 id="interesting-facts">Interesting Facts</h4>
+<ul>
+<li>Git was created by Linus Torvalds in 2005.</li>
+<li>GitHub hosts over 100 million repositories as of 2024.</li>
+<li>Code reviews have been shown to reduce the number of defects in software significantly.</li>
+<li>Linus Torvalds, creator of Git, emphasized the importance of code reviews in maintaining the quality of the Linux kernel.</li>
+<li>CI/CD automation can reduce the average time to resolve issues by up to 20%.</li>
+<li>GitHub Actions allows you to create custom actions, enabling reusable workflows across multiple projects.</li>
+<li>GitHub Dependabot can automatically create PRs to update dependencies, helping maintain security without manual intervention.</li>
+<li>Branch protection rules can be customized to fit the specific needs of a project, providing flexibility and control over the development workflow.</li>
+</ul>
+<p><br></p>
+<h4 id="quiz">Quiz</h4>
+<ol>
+<li>
+<p><strong>What is a Git repository?</strong></p>
+<ul>
+<li><em>A Git repository is a storage location for a software project, containing all files, directories, and the entire history of changes. It allows multiple developers to collaborate by tracking changes, merging updates, and maintaining versions.</em><br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>Explain the difference between git pull and git fetch.</strong></p>
+<ul>
+<li><em><code>git fetch</code> downloads updates from the remote repository to the local repository without merging them into the working directory. <code>git pull</code> fetches the updates and immediately merges them into the local branch, updating the working directory.</em><br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>What is a pull request?</strong></p>
+<ul>
+<li><em>A pull request is a method for submitting changes to a repository. It allows developers to notify others about the changes they've made, request reviews, and discuss potential modifications before merging the changes into the main branch.</em><br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>How do you revert a commit in Git?</strong></p>
+<ul>
+<li><em>To revert a commit, use the <code>git revert &lt;commit-hash&gt;</code> command, which creates a new commit that undoes the changes made by the specified commit, preserving the history.</em><br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>What are GitHub Actions used for?</strong></p>
+<ul>
+<li><em>GitHub Actions are used to automate workflows, such as continuous integration (CI) and continuous deployment (CD). They allow you to build, test, and deploy your code based on events like pushes, pull requests, and scheduled tasks.</em><br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>Define branching in Git.</strong></p>
+<ul>
+<li><em>Branching in Git involves creating separate lines of development within a repository. Branches allow you to work on features, fixes, or experiments in isolation from the main codebase, and later merge them back when ready.</em><br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>What is the purpose of a .gitignore file?</strong></p>
+<ul>
+<li><em>A <code>.gitignore</code> file specifies which files and directories Git should ignore and not track. This is useful for excluding files that are generated during development, such as build artifacts, temporary files, and sensitive information.</em><br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>How can you protect a branch in GitHub?</strong></p>
+<ul>
+<li><em>You can protect a branch in GitHub by enabling branch protection rules, which can include requiring pull requests for changes, enforcing status checks, requiring reviews before merging, and restricting who can push to the branch.</em><br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>What command is used to stage changes in Git?</strong></p>
+<ul>
+<li><em>The command <code>git add &lt;file&gt;</code> is used to stage changes, marking them for inclusion in the next commit. You can stage all changes with <code>git add .</code>.</em><br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>Explain the use of forks in GitHub.</strong></p>
+<ul>
+<li><em>Forks are copies of repositories that allow developers to freely experiment with changes without affecting the original project. Forks enable users to work on their own version of a project, contribute back through pull requests, and explore modifications independently.</em><br><br></li>
+</ul>
+</li>
+</ol>
+<p><br></p>
+<h4 id="additional-tasks">Additional Tasks</h4>
+<ol>
+<li><a href="https://github.com/kichukowa/WEB">Create a new GitHub repository.</a></li>
+<li><a href="https://github.com/kichukowa/github-docs">Make and commit changes to a README file.</a></li>
+<li>Create branches and practice merging.</li>
+<li>Set up branch protection rules.</li>
+<li><a href="https://github.com/kichukowa/tf-review-plan">Explore GitHub Actions by creating a simple workflow.</a></li>
+</ol>
+<p><br><br></p>
+<h2 id="topic-2-infrastructure-as-code-with-terraform">Topic 2: Infrastructure as Code with Terraform</h2>
+<p><br></p>
+<h4 id="explanation_1">Explanation</h4>
+<p><strong>Why it's needed</strong>: IaC allows for the automation and consistency of infrastructure deployment.</p>
+<p><strong>Historical Methods</strong>: Manual configuration and deployment using scripts and CLI commands, which were error-prone and not easily replicable.</p>
+<p><br></p>
+<h4 id="theory_1">Theory</h4>
+<p><strong>Terraform Basics</strong>: Providers, resources, variables, state management, and modules.</p>
+<p><strong>GKE Deployment</strong>: Setting up GCP provider, creating a GKE cluster, and managing state.</p>
+<p><br></p>
+<h4 id="improvements-and-modern-methods_1">Improvements and Modern Methods</h4>
+<p><strong>Reusable Modules</strong>: Creating reusable and shareable modules for standard configurations.</p>
+<p><strong>State Management</strong>: Using remote state backends for collaboration.</p>
+<p><strong>Automation</strong>: Integrating Terraform with CI/CD pipelines for continuous deployment.</p>
+<p><br></p>
+<h4 id="interesting-facts_1">Interesting Facts</h4>
+<ul>
+<li>Terraform supports multiple cloud providers including AWS, Azure, GCP, and many others.</li>
+<li>The concept of IaC significantly reduces configuration drift and improves consistency.</li>
+</ul>
+<p><br></p>
+<h4 id="quiz_1">Quiz</h4>
+<ol>
+<li>What is Infrastructure as Code (IaC)?</li>
+<li>What is a Terraform provider?</li>
+<li>How do you define a resource in Terraform?</li>
+<li>What is Terraform state?</li>
+<li>Explain the purpose of terraform plan.</li>
+<li>What is a Terraform module?</li>
+<li>How can you manage secrets in Terraform?</li>
+<li>What is the purpose of terraform init?</li>
+<li>Explain the use of remote backends in Terraform.</li>
+<li>How does Terraform ensure idempotency?</li>
+</ol>
+<p><br></p>
+<h4 id="additional-tasks_1">Additional Tasks</h4>
+<ol>
+<li>Set up a basic Terraform configuration for a GKE cluster.</li>
+<li>Use variables and outputs in your configuration.</li>
+<li>Explore and use a remote backend for state management.</li>
+<li>Create a reusable Terraform module.</li>
+</ol>
+<p><br><br></p>
+<h2 id="topic-3-continuous-integrationcontinuous-deployment-cicd-with-github-actions">Topic 3: Continuous Integration/Continuous Deployment (CI/CD) with GitHub Actions</h2>
+<p><br></p>
+<h4 id="explanation_2">Explanation</h4>
+<p><strong>Why it's needed</strong>: CI/CD automates the testing and deployment process, ensuring code is always in a deployable state.</p>
+<p><strong>Historical Methods</strong>: Manual builds and deployments, leading to frequent errors and inconsistent environments.</p>
+<p><br></p>
+<h4 id="theory_2">Theory</h4>
+<p><strong>CI/CD Basics</strong>: Understanding the principles of continuous integration, delivery, and deployment.</p>
+<p><strong>GitHub Actions</strong>: YAML syntax, jobs, steps, and runners. Creating workflows for CI/CD.</p>
+<p><br></p>
+<h4 id="improvements-and-modern-methods_2">Improvements and Modern Methods</h4>
+<p><strong>Parallel Jobs</strong>: Running jobs in parallel to speed up the CI/CD process.</p>
+<p><strong>Artifact Management</strong>: Storing and reusing build artifacts.</p>
+<p><strong>Security</strong>: Managing secrets and permissions in workflows.</p>
+<p><br></p>
+<h4 id="interesting-facts_2">Interesting Facts</h4>
+<ul>
+<li>CI/CD pipelines significantly reduce the time to market for new features.</li>
+<li>GitHub Actions allows you to run workflows directly in the cloud without needing your own CI server.</li>
+</ul>
+<p><br></p>
+<h4 id="quiz_2">Quiz</h4>
+<ol>
+<li>What is CI/CD?</li>
+<li>Describe the difference between continuous delivery and continuous deployment.</li>
+<li>What is a runner in GitHub Actions?</li>
+<li>How do you define a job in a GitHub Actions workflow?</li>
+<li>Explain the purpose of actions/checkout.</li>
+<li>What are GitHub Actions secrets?</li>
+<li>How do you trigger a workflow on push events?</li>
+<li>What is an artifact in CI/CD?</li>
+<li>How do you manage dependencies in a CI/CD pipeline?</li>
+<li>Explain the use of environment variables in GitHub Actions.</li>
+</ol>
+<p><br></p>
+<h4 id="additional-tasks_2">Additional Tasks</h4>
+<ol>
+<li>Create a simple CI workflow to build and test a project.</li>
+<li>Set up a CD workflow to deploy an application.</li>
+<li>Use GitHub secrets to manage sensitive information.</li>
+<li>Experiment with matrix builds to test across different environments.</li>
+</ol>
+<p><br><br></p>
+<h2 id="topic-4-containerization-with-docker">Topic 4: Containerization with Docker</h2>
+<p><br></p>
+<h4 id="explanation_3">Explanation</h4>
+<p><strong>Why it's needed</strong>: Containers ensure consistency across development and production environments by packaging applications and their dependencies.</p>
+<p><strong>Historical Methods</strong>: Applications were run directly on the host OS, leading to dependency and environment issues.</p>
+<p><br></p>
+<h4 id="theory_3">Theory</h4>
+<p><strong>Docker Basics</strong>: Images, containers, Dockerfile, Docker Hub.</p>
+<p><strong>Creating a Dockerfile</strong>: Defining a Dockerfile to build an Nginx server with a static page.</p>
+<p><br></p>
+<h4 id="improvements-and-modern-methods_3">Improvements and Modern Methods</h4>
+<p><strong>Multi-Stage Builds</strong>: Reducing image size and improving build efficiency.</p>
+<p><strong>Docker Compose</strong>: Managing multi-container applications.</p>
+<p><strong>Security</strong>: Best practices for securing Docker images.</p>
+<p><br></p>
+<h4 id="interesting-facts_3">Interesting Facts</h4>
+<ul>
+<li>Docker was introduced in 2013 and has revolutionized the way applications are deployed.</li>
+<li>As of 2024, Docker Hub hosts millions of container images.</li>
+</ul>
+<p><br></p>
+<h4 id="quiz_3">Quiz</h4>
+<ol>
+<li>What is Docker?</li>
+<li>Define an image and a container in Docker.</li>
+<li>What is a Dockerfile?</li>
+<li>Explain the purpose of Docker Hub.</li>
+<li>How do you build a Docker image?</li>
+<li>What is a multi-stage build?</li>
+<li>How do you run a Docker container?</li>
+<li>What is Docker Compose?</li>
+<li>How can you reduce the size of a Docker image?</li>
+<li>Explain the concept of container orchestration.</li>
+</ol>
+<p><br></p>
+<h4 id="additional-tasks_3">Additional Tasks</h4>
+<ol>
+<li>Write a Dockerfile for a simple application.</li>
+<li>Build and push a Docker image to Docker Hub.</li>
+<li>Use Docker Compose to manage a multi-container application.</li>
+<li>Implement best practices for Docker image security.</li>
+</ol>
+<p><br><br></p>
+<h2 id="topic-5-kubernetes-basics-and-gke">Topic 5: Kubernetes Basics and GKE</h2>
+<p><br></p>
+<h4 id="explanation_4">Explanation</h4>
+<p><strong>Why it's needed</strong>: Kubernetes automates the deployment, scaling, and management of containerized applications.</p>
+<p><strong>Historical Methods</strong>: Manual container orchestration or using simpler tools like Docker Swarm.</p>
+<p><br></p>
+<h4 id="theory_4">Theory</h4>
+<p><strong>Kubernetes Concepts</strong>: Pods, nodes, clusters, deployments, services, and ingress.</p>
+<p><strong>GKE</strong>: Google Kubernetes Engine simplifies Kubernetes deployment and management in the cloud.</p>
+<p><br></p>
+<h4 id="improvements-and-modern-methods_4">Improvements and Modern Methods</h4>
+<p><strong>Autoscaling</strong>: Automatically adjusting the number of pods based on load.</p>
+<p><strong>Stateful Applications</strong>: Managing stateful applications using StatefulSets.</p>
+<p><strong>Security</strong>: Implementing RBAC and network policies.</p>
+<p><br></p>
+<h4 id="interesting-facts_4">Interesting Facts</h4>
+<ul>
+<li>Kubernetes was originally developed by Google and released as open-source in 2014.</li>
+<li>GKE is a managed Kubernetes service that handles cluster management tasks like upgrades and scaling.</li>
+</ul>
+<p><br></p>
+<h4 id="quiz_4">Quiz</h4>
+<ol>
+<li>What is Kubernetes?</li>
+<li>Define a Pod in Kubernetes.</li>
+<li>What is a Kubernetes cluster?</li>
+<li>Explain the purpose of a Deployment.</li>
+<li>What is a Service in Kubernetes?</li>
+<li>How does an Ingress resource work?</li>
+<li>What is the purpose of a Node in Kubernetes?</li>
+<li>Describe the concept of autoscaling in Kubernetes.</li>
+<li>What is a StatefulSet?</li>
+<li>How does RBAC work in Kubernetes?</li>
+</ol>
+<p><br></p>
+<h4 id="additional-tasks_4">Additional Tasks</h4>
+<ol>
+<li>Deploy a simple application to a local Kubernetes cluster using Minikube.</li>
+<li>Create and manage Kubernetes resources like Pods, Deployments, and Services.</li>
+<li>Explore GKE and deploy a Kubernetes application to it.</li>
+<li>Implement autoscaling for your application.</li>
+</ol>
+<p><br><br></p>
+<h2 id="topic-6-networking-and-ingress-in-kubernetes">Topic 6: Networking and Ingress in Kubernetes</h2>
+<p><br></p>
+<h4 id="explanation_5">Explanation</h4>
+<p><strong>Why it's needed</strong>: Networking in Kubernetes manages communication within the cluster and exposes applications to external traffic.</p>
+<p><strong>Historical Methods</strong>: Manual configuration of networking routes and load balancers.</p>
+<p><br></p>
+<h4 id="theory_5">Theory</h4>
+<p><strong>Kubernetes Networking</strong>: Services, Ingress controllers, and network policies.</p>
+<p><strong>Ingress Controllers</strong>: Managing external access to services in a Kubernetes cluster.</p>
+<p><br></p>
+<h4 id="improvements-and-modern-methods_5">Improvements and Modern Methods</h4>
+<p><strong>Service Mesh</strong>: Using tools like Istio for advanced networking features.</p>
+<p><strong>Network Policies</strong>: Implementing fine-grained control over network traffic.</p>
+<p><br></p>
+<h4 id="interesting-facts_5">Interesting Facts</h4>
+<ul>
+<li>Kubernetes uses a flat network model, where all Pods can communicate with each other by default.</li>
+<li>Ingress controllers can manage SSL termination and load balancing.</li>
+</ul>
+<p><br></p>
+<h4 id="quiz_5">Quiz</h4>
+<ol>
+<li>What is a Service in Kubernetes?</li>
+<li>Explain the role of an Ingress controller.</li>
+<li>What is a Network Policy?</li>
+<li>How does a LoadBalancer service work in Kubernetes?</li>
+<li>What is the purpose of a ClusterIP service?</li>
+<li>How can you secure network traffic in Kubernetes?</li>
+<li>Describe the difference between NodePort and LoadBalancer services.</li>
+<li>What is SSL termination?</li>
+<li>How does Kubernetes handle internal DNS resolution?</li>
+<li>Explain the concept of a service mesh.</li>
+</ol>
+<p><br></p>
+<h4 id="additional-tasks_5">Additional Tasks</h4>
+<ol>
+<li>Deploy an Ingress controller using Helm.</li>
+<li>Configure an Ingress resource to route traffic to your application.</li>
+<li>Implement SSL for your Ingress resource.</li>
+<li>Explore and implement network policies in your cluster.</li>
+</ol>
+<p><br><br></p>
+<h2 id="topic-7-health-checks-in-kubernetes">Topic 7: Health Checks in Kubernetes</h2>
+<p><br></p>
+<h4 id="explanation_6">Explanation</h4>
+<p><strong>Why it's needed</strong>: Health checks ensure that applications are running correctly and can automatically restart or reroute traffic in case of failures.</p>
+<p><strong>Historical Methods</strong>: Manual monitoring and intervention, which were less efficient and reliable.</p>
+<p><br></p>
+<h4 id="theory_6">Theory</h4>
+<p><strong>Liveness and Readiness Probes</strong>: Understanding how Kubernetes uses these probes to manage application health and availability.</p>
+<p><br></p>
+<h4 id="improvements-and-modern-methods_6">Improvements and Modern Methods</h4>
+<p><strong>Custom Probes</strong>: Creating custom health checks for complex applications.</p>
+<p><strong>Integration with Monitoring Tools</strong>: Using tools like Prometheus and Grafana to monitor health check metrics.</p>
+<p><br></p>
+<h4 id="interesting-facts_6">Interesting Facts</h4>
+<ul>
+<li>Kubernetes supports three types of probes: HTTP, TCP, and Command.</li>
+<li>Probes can significantly improve the resilience and uptime of applications.</li>
+</ul>
+<p><br></p>
+<h4 id="quiz_6">Quiz</h4>
+<ol>
+<li>What is a liveness probe?</li>
+<li>What is a readiness probe?</li>
+<li>How does Kubernetes use probes to manage Pods?</li>
+<li>Explain the purpose of an HTTP probe.</li>
+<li>What is the difference between liveness and readiness probes?</li>
+<li>How can you configure a liveness probe?</li>
+<li>What happens if a liveness probe fails?</li>
+<li>How can readiness probes affect service availability?</li>
+<li>What is the default interval for health checks in Kubernetes?</li>
+<li>How can you monitor probe metrics?</li>
+</ol>
+<p><br></p>
+<h4 id="additional-tasks_6">Additional Tasks</h4>
+<ol>
+<li>Add liveness and readiness probes to your Nginx deployment.</li>
+<li>Experiment with different probe configurations (HTTP, TCP, Command).</li>
+<li>Monitor probe metrics using Prometheus and Grafana.</li>
+<li>Create custom health checks for a more complex application.</li>
+</ol>
+<p><br><br></p>
+<h2 id="final-project">Final Project</h2>
+<p>Integrate all the learned topics into a comprehensive project:</p>
+<p><br></p>
+<h5 id="step-1-setup-a-new-private-project-in-github-and-terraform-configuration">STEP 1. Setup a New Private Project in GitHub and Terraform Configuration</h5>
+<ol>
+<li>
+<p><strong>Create a New GitHub Repository</strong>:</p>
+<ul>
+<li>Go to GitHub and create a new repository.<ul>
+<li><a href="https://github.com/kichukowa/kubernetes-deploy">New Repo</a></li>
+</ul>
+</li>
+<li>Make sure to set it as private.
+<br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>Initialize Terraform Configuration</strong>:</p>
+<ul>
+<li>On your local machine, create a directory for your project.</li>
+<li>Inside this directory, create another directory called <code>terraform</code>.</li>
+<li>Initialize a new Git repository in your project directory.
+<br><br></li>
+</ul>
+</li>
+<li>
+<p><strong>Terraform Files</strong>:</p>
+<ul>
+<li><strong>Provider Configuration</strong>: Create a <code>provider.tf</code> to configure the Google Cloud provider.</li>
+<li><strong>Variables</strong>: Create a <code>variables.tf</code> to define variables like project ID, region, and cluster name.</li>
+<li><strong>Main Configuration</strong>: Create a <code>main.tf</code> to define the resources, including the GKE cluster and node pools.</li>
+<li><strong>Outputs</strong>: Create an <code>outputs.tf</code> to output the necessary information, such as cluster endpoint and credentials.</li>
+</ul>
+</li>
+<li>
+<p><strong>GitHub Actions CI/CD Job for Terraform</strong>:</p>
+<ul>
+<li>Create a directory <code>.github/workflows</code> and add a YAML file (e.g., <code>infrastructure.yml</code>).</li>
+<li>This file will define a workflow to initialize Terraform, plan, and apply the configuration whenever changes are pushed to the <code>terraform</code> directory.
+<br><br></li>
+</ul>
+</li>
+</ol>
+<h5 id="step-2-terraform-configuration-write-terraform-scripts-to-deploy-a-gke-cluster">STEP 2. Terraform Configuration: Write Terraform scripts to deploy a GKE cluster.</h5>
+<ol>
+<li></li>
+<li></li>
+<li></li>
+</ol>
+<h5 id="step-3-cicd-pipelines-set-up-github-actions-workflows-for-terraform-and-docker">STEP 3. CI/CD Pipelines: Set up GitHub Actions workflows for Terraform and Docker.</h5>
+<ol>
+<li></li>
+<li></li>
+<li></li>
+</ol>
+<h5 id="step-4-docker-image-build-and-push-an-nginx-docker-image-with-a-static-hello-world-page">STEP 4. Docker Image: Build and push an Nginx Docker image with a static "Hello World" page.</h5>
+<ol>
+<li></li>
+<li></li>
+<li></li>
+</ol>
+<h5 id="step-5-ingress-controller-deploy-an-ingress-controller-using-helm">STEP 5. Ingress Controller: Deploy an ingress controller using Helm.</h5>
+<ol>
+<li></li>
+<li></li>
+<li></li>
+</ol>
+<h5 id="step-6-kubernetes-deployment-deploy-the-docker-image-to-gke-with-appropriate-services-and-ingress">STEP 6. Kubernetes Deployment: Deploy the Docker image to GKE with appropriate services and ingress.</h5>
+<ol>
+<li></li>
+<li></li>
+<li></li>
+</ol>
+<h5 id="step-7-ssl-configuration-secure-the-ingress-with-ssl-certificates">STEP 7. SSL Configuration: Secure the ingress with SSL certificates.</h5>
+<ol>
+<li></li>
+<li></li>
+<li></li>
+</ol>
+<h5 id="step-8-health-checks-implement-and-monitor-liveness-and-readiness-probes">STEP 8. Health Checks: Implement and monitor liveness and readiness probes.</h5>
+<ol>
+<li></li>
+<li></li>
+<li></li>
+</ol></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js"></script>
+        <script src="../../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
